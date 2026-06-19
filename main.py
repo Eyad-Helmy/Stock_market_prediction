@@ -23,8 +23,9 @@ def main():
     print(f"Raw data shape: {df_raw.shape}")
     
     #TODO engineer new features (the ones in CONFIG['feature_cols'] except for close since it already exists) and preprocessiing
-    #TODO scaling data and then spliting
-    #TODO create 3D sequences (LSTM-compatable format)
+    #TODO split rows to training and testing
+    #TODO scaling data on train set only then transform both sets 
+    #TODO create 3D sequences (LSTM-compatable format) on both sets seperatly
     #TODO build model (window size, number of features)
     #TODO train model
     #TODO evaluate

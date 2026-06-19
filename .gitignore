@@ -1,6 +1,4 @@
 .venv311/
-requirements.txt
-
 data/
 test.py
 
