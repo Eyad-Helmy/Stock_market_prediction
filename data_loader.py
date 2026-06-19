@@ -1,6 +1,7 @@
 import os
 import yfinance as yf
 import pandas as pd
+from datetime import date, datetime
 
 def download_stock_data(
     ticker: str,
@@ -18,8 +19,15 @@ def download_stock_data(
         df = pd.read_csv(file_path, index_col="Date")
         print(f"[data_loader] Loaded {len(df)} rows")
         return df
+    
+    end_date_dt = datetime.strptime(end_date, "%Y-%m-%d")
+    today = date.today()
 
-    print(f"[data_loader] Downloading {ticker} from Yahoo finance ({start_date} -> {end_date}) ...")
+    if end_date_dt.date() > today:
+        print(f"[data_loader] Downloading {ticker} from Yahoo finance ({start_date} -> {today}) ...")
+    else:
+        print(f"[data_loader] Downloading {ticker} from Yahoo finance ({start_date} -> {end_date}) ...")
+    
     df = yf.download(ticker, start_date, end_date, progress=False)
 
     if isinstance(df.columns, pd.MultiIndex):
