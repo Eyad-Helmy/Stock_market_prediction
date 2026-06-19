@@ -1,5 +1,7 @@
 # main orchastrator
 
+from data_loader import download_stock_data
+
 CONFIG = {
     "ticker": "AAPL",
     "start_date": "2018-01-01",
@@ -12,7 +14,15 @@ CONFIG = {
 }
 
 def main():
-    #TODO download stock data from yahoo finance api
+    print("\n" + "=" * 50)
+    print("   STOCK MARKET PREDICTION — AAPL LSTM")
+    print("=" * 50 + "\n")
+
+    print("STEP 1: LOADING DATA:")
+    df_raw = download_stock_data(CONFIG['ticker'], CONFIG['start_date'], CONFIG['end_date'])    # cache dir is automatically set to "data"
+    #TODO add a feature to show that dates after today were cropped since they don't exist yet
+    print(f"Raw data shape: {df_raw.shape}")
+    
     #TODO engineer new features (the ones in CONFIG['feature_cols'] except for close since it already exists) and preprocessiing
     #TODO scaling data and then spliting
     #TODO create 3D sequences (LSTM-compatable format)
@@ -21,3 +31,6 @@ def main():
     #TODO evaluate
     #TODO visualize
     pass
+
+if __name__ == "__main__":
+    main()
