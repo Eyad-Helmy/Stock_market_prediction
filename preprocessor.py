@@ -16,7 +16,7 @@
 
 import pandas as pd
 
-def add_features(df: pd.DataFrame):
+def add_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Adds features and cleans data from null values resulted from the feature engineering
     """
@@ -37,4 +37,11 @@ def add_features(df: pd.DataFrame):
 
     return df
 
+
+def split_data(df: pd.DataFrame, test_size: float = 0.2) -> tuple:
+    split_index = int(len(df) * (1 - test_size))   # for dataset of size 10,split_index = 10 * 0.8 = 8
+    train_df = df.iloc[:split_index].copy()
+    test_df = df.iloc[split_index:].copy()
+
+    return train_df, test_df
 
