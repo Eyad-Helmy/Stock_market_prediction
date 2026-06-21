@@ -16,6 +16,7 @@
 
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 def add_features(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -69,25 +70,14 @@ def scale_data(
     return X_train, y_train, X_test, y_test, feature_scaler, target_scaler
 
 def create_sequences(X: pd.DataFrame, y: pd.DataFrame, window_size: int = 30):
-    import numpy as np
+    X_seq, y_seq = [], []
 
-    X_arr = np.asarray(X)
-    y_arr = np.asarray(y)
+    for i in range(window_size, len(X)):
+        X_seq.append(X[i - window_size : i])
+        y_seq.append(y[i])
 
-    # Ensure y is 1-D (n_samples,) for convenience
-    if y_arr.ndim == 2 and y_arr.shape[1] == 1:
-        y_arr = y_arr.ravel()
-
-    X_seq = []
-    y_seq = []
-
-    for i in range(window_size, len(X_arr)):
-        X_seq.append(X_arr[i - window_size : i])
-        y_seq.append(y_arr[i])
-
-    X_seq = np.stack(X_seq) if len(X_seq) > 0 else np.empty((0, window_size, X_arr.shape[1]))
-    y_seq = np.asarray(y_seq)
-
+    X_seq = np.array(X_seq)
+    y_seq = np.array(y_seq)
     print(f"[preprocessor] create_sequences: X_seq = {X_seq.shape}, y_seq = {y_seq.shape}")
 
     return X_seq, y_seq
