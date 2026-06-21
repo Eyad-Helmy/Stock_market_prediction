@@ -1,6 +1,5 @@
 .venv311/
 data/
-test.py
 
 __pycache__/
 *.pyc
