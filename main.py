@@ -22,10 +22,10 @@ def main():
     df_raw = download_stock_data(CONFIG['ticker'], CONFIG['start_date'], CONFIG['end_date'])    # cache dir is automatically set to "data"
     print(f"Raw data shape: {df_raw.shape}")
     
-    #TODO engineer new features (the ones in CONFIG['feature_cols'] except for close since it already exists) and preprocessiing /done
-    #TODO split rows to training and testing /done
-    #TODO scaling data on train set only then transform both sets 
-    #TODO create 3D sequences (LSTM-compatable format) on both sets seperatly
+    #TODO engineer new features (the ones in CONFIG['feature_cols'] except for close since it already exists) and preprocessiing /DONE
+    #TODO split rows to training and testing /DONE
+    #TODO scaling data on train set only then transform both sets   /DONE
+    #TODO create 3D sequences (LSTM-compatable format) on both sets seperatly  /DONE
     #TODO build model (window size, number of features)
     #TODO train model
     #TODO evaluate

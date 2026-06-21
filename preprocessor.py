@@ -15,6 +15,7 @@
     #     - What were the exact prices 1, 2, 3 days ago?          (Lag features)
 
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 def add_features(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -45,3 +46,48 @@ def split_data(df: pd.DataFrame, test_size: float = 0.2) -> tuple:
 
     return train_df, test_df
 
+def scale_data(
+    train_df: pd.DataFrame,
+    test_df: pd.DataFrame,
+    feature_cols: list,
+    target_col: str
+) -> tuple:
+    
+    feature_scaler = MinMaxScaler(feature_range=(0,1))
+    target_scaler = MinMaxScaler(feature_range=(0,1))   # seperate because we will be only reversing this to show output
+
+    # fit the scaling formula only to the training data not on all to avoid leaking test information
+    X_train = feature_scaler.fit_transform(train_df[feature_cols].values)
+    y_train = target_scaler.fit_transform(train_df[[target_col]].values)
+
+    # transform the test data using the same training scaling formulas so the test set remains unseen
+    X_test = feature_scaler.transform(test_df[feature_cols].values)
+    y_test = target_scaler.transform(test_df[[target_col]].values)
+
+    print(f"[preprocessor] scale_data: X_train = {X_train.shape}, X_test = {X_test.shape}")
+
+    return X_train, y_train, X_test, y_test, feature_scaler, target_scaler
+
+def create_sequences(X: pd.DataFrame, y: pd.DataFrame, window_size: int = 30):
+    import numpy as np
+
+    X_arr = np.asarray(X)
+    y_arr = np.asarray(y)
+
+    # Ensure y is 1-D (n_samples,) for convenience
+    if y_arr.ndim == 2 and y_arr.shape[1] == 1:
+        y_arr = y_arr.ravel()
+
+    X_seq = []
+    y_seq = []
+
+    for i in range(window_size, len(X_arr)):
+        X_seq.append(X_arr[i - window_size : i])
+        y_seq.append(y_arr[i])
+
+    X_seq = np.stack(X_seq) if len(X_seq) > 0 else np.empty((0, window_size, X_arr.shape[1]))
+    y_seq = np.asarray(y_seq)
+
+    print(f"[preprocessor] create_sequences: X_seq = {X_seq.shape}, y_seq = {y_seq.shape}")
+
+    return X_seq, y_seq
