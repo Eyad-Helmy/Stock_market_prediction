@@ -37,19 +37,19 @@ def main():
 
     #TODO scaling data on train set only then transform both sets   /DONE
     print("STEP 4: Scaling data...")
-    X_train, y_train, X_test, y_test, feat_scaler, tgt_scaler = scale_data(
+    X_train, y_train, X_test, y_test, feature_scaler, target_scaler = scale_data(
         train_set, test_set, CONFIG["feature_cols"], CONFIG["target_col"]
     )
-    
+
     #TODO create 3D sequences (LSTM-compatable format) on both sets seperatly  /DONE
     print("STEP 5: Creating sequences...")
     X_train_seq, y_train_seq = create_sequences(X_train, y_train, window_size=CONFIG["window_size"])
     X_test_seq,  y_test_seq  = create_sequences(X_test,  y_test,  window_size=CONFIG["window_size"])
 
-    #TODO build model (window size, number of features)
-    #TODO train model
+    #TODO build model (window size, number of features)     /tobeunderstood
+    #TODO train model   /tobeunderstood
     #TODO evaluate
-    #TODO visualize
+    #TODO visualize 
     pass
 
 if __name__ == "__main__":
