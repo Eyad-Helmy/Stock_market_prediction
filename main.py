@@ -2,6 +2,10 @@
 
 from data_loader import download_stock_data
 from preprocessor import add_features, split_data, scale_data, create_sequences 
+from model import build_model, train_model
+from evaluate import evaluate
+from visualize import plot_predictions, plot_training_loss
+import os
 
 CONFIG = {
     "ticker": "AAPL",
@@ -47,10 +51,47 @@ def main():
     X_test_seq,  y_test_seq  = create_sequences(X_test,  y_test,  window_size=CONFIG["window_size"])
 
     #TODO build model (window size, number of features)     /tobeunderstood
-    #TODO train model   /tobeunderstood
-    #TODO evaluate
-    #TODO visualize 
-    pass
+    # STEP 6: Build the model
+    print("STEP 6: Building model...")
+    num_features = len(CONFIG["feature_cols"])
+    input_shape = (CONFIG["window_size"], num_features)
+    model = build_model(input_shape)
+
+    # STEP 7: Train the model
+    print("STEP 7: Training model...")
+    model, history = train_model(
+        model,
+        X_train_seq,
+        y_train_seq,
+        X_test_seq,
+        y_test_seq,
+        epochs=CONFIG["num_epochs"],
+        batch_size=CONFIG["batch_size"]
+    )
+
+    # STEP 8: Evaluate
+    print("STEP 8: Evaluating model on test set...")
+    y_pred_dollars, y_true_dollars = evaluate(
+        model,
+        X_test_seq,
+        y_test_seq,
+        target_scaler
+    )
+
+    # STEP 9: Visualize
+    print("STEP 9: Visualizing model performance...")
+    os.makedirs("outputs", exist_ok=True)
+    plot_predictions(
+        y_true_dollars,
+        y_pred_dollars,
+        ticker=CONFIG["ticker"],
+        save_path=os.path.join("outputs", f"{CONFIG['ticker'].lower()}_predictions.png")
+    )
+    plot_training_loss(
+        history,
+        save_path=os.path.join("outputs", f"{CONFIG['ticker'].lower()}_training_loss.png")
+    )
+
 
 if __name__ == "__main__":
     main()
